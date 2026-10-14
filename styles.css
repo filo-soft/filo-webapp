@@ -1,17 +1,10 @@
-/* ===== ФИРМЕННЫЙ СТИЛЬ ФИЛОСОФТ =====
-   Палитра: #0A083C (black/фон), #252090 (prime), #FF844D (orange),
-            #F0F0FC (white), шкала синего #DAD9F8..#6460DF
-   Шрифт: Mabry Pro (единственный). Резкие углы, без скруглений, без теней. */
+/* ===== ФИРМЕННЫЙ СТИЛЬ ФИЛОСОФТ — Mini App =====
+   Данные: config.json. Баннер-картинка, фон-картинка, кнопка-картинка. */
 
 @font-face {
   font-family: "Mabry Pro";
   src: url("assets/fonts/MabryPro-Regular.ttf") format("truetype");
   font-weight: 400;
-}
-@font-face {
-  font-family: "Mabry Pro";
-  src: url("assets/fonts/MabryPro-Medium.ttf") format("truetype");
-  font-weight: 500;
 }
 @font-face {
   font-family: "Mabry Pro";
@@ -24,25 +17,22 @@
   font-weight: 900;
 }
 
-:root {
-  --black: #0a083c;
-  --prime: #252090;
-  --orange: #ff844d;
-  --orange-b: #eb5f3c;
-  --white: #f0f0fc;
-  --blue300: #9a98ed;
-  --blue400: #6460df;
-}
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
   height: 100%;
-  background: var(--black);
-  color: var(--white);
+  margin: 0;
+  color: #f0f0fc;
   font-family: "Mabry Pro", sans-serif;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* ===== Фон (картинка) ===== */
+body {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
 }
 
 .app {
@@ -50,61 +40,74 @@ html, body {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  padding: 22px 22px calc(22px + env(safe-area-inset-bottom));
+  padding: 20px 22px calc(20px + env(safe-area-inset-bottom));
   position: relative;
-  overflow: hidden;
+  z-index: 1;
 }
 
-/* ===== Прелоадер (логотип по центру) ===== */
+/* ===== Прелоадер ===== */
 .loader {
   position: fixed;
   inset: 0;
-  background: var(--black);
+  z-index: 50;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 50;
-  /* анимация уезжания логотипа НЕ применяется к контейнеру, только к лого */
+  gap: 10px;
+  /* фон прелоадера — такой же как body */
+  transition: opacity 0.4s ease;
 }
-.loader-logo {
-  height: 60px;
+.loader.hide { display: none; }
+.loader-mark {
+  height: 56px;
   width: auto;
   display: block;
   opacity: 0;
   animation: loaderFadeIn 0.4s ease forwards;
 }
 @keyframes loaderFadeIn {
-  from { opacity: 0; transform: scale(0.96); }
+  from { opacity: 0; transform: scale(0.92); }
   to   { opacity: 1; transform: scale(1); }
 }
-/* скрытие прелоадера после того как лого уехало */
-.loader.hide { display: none; }
 
-/* ===== Шапка (логотип приезжает сюда) ===== */
+/* ===== Шапка ===== */
 .header {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 34px;
+  text-align: center;
+  margin-bottom: 26px;
   position: relative;
   z-index: 5;
 }
-.header-logo {
-  height: 44px;
+.header-mark {
+  height: 40px;
   width: auto;
   display: block;
   opacity: 0;
 }
-/* когда лого переместилось в шапку — показать */
-.header-logo.settled {
+.header-mark.settled {
   animation: headerPop 0.5s ease forwards;
 }
 @keyframes headerPop {
-  from { opacity: 0; transform: scale(1.02); }
+  from { opacity: 0; transform: scale(1.04); }
   to   { opacity: 1; transform: scale(1); }
 }
+.header-word {
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: #f0f0fc;
+  margin-top: 6px;
+  opacity: 0;
+}
+.header-word.settled {
+  animation: headerPop 0.5s ease forwards;
+  animation-delay: 0.1s;
+}
 
-/* ===== Баннер (квадратная картинка) ===== */
+/* ===== Баннер ===== */
 .banner {
   position: relative;
   z-index: 5;
@@ -121,34 +124,39 @@ html, body {
 }
 .banner-img {
   width: 100%;
-  aspect-ratio: 1 / 1; /* квадрат */
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   display: block;
-  background: var(--prime);
+  background: #252090;
 }
 
-/* ===== Футер: ссылка на сайт ===== */
+/* ===== Футер: кнопка-картинка ===== */
 .footer {
   margin-top: auto;
   text-align: center;
-  padding-top: 28px;
+  padding-top: 22px;
   position: relative;
   z-index: 5;
   opacity: 0;
   animation: bannerIn 0.5s ease forwards;
   animation-delay: 0.25s;
 }
-.footer-link {
+.footer-btn {
   display: inline-block;
-  background: var(--orange);
-  color: var(--black);
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 16px;
-  padding: 13px 26px;
-  /* резкие углы */
+  max-width: 240px;
+  width: 100%;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  background: transparent;
 }
-.footer-link:active { opacity: 0.85; }
+.footer-btn img,
+.footer-btn .btn-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.footer-btn:active { opacity: 0.85; }
 
 /* баннер выключен */
 .empty {
@@ -156,7 +164,7 @@ html, body {
   z-index: 5;
   text-align: center;
   font-size: 15px;
-  color: var(--white);
-  opacity: 0.7;
+  color: #f0f0fc;
+  opacity: 0.8;
   margin-top: 40px;
 }

@@ -1,11 +1,7 @@
-/* ФИЛОСОФТ — Telegram Mini App (баннер-картинка)
- * Главный экран: квадратный баннер-картинка + логотип с анимацией
- * «прелоадер по центру -> уезжает вверх в шапку» + ссылка на сайт внизу.
- *
- * Данные — из config.json:
- *   banner.image  — путь к картинке (квадрат, см. README)
- *   banner.link   — ссылка под баннером
- *   app.footerLink — ссылка внизу
+/* ФИЛОСОФТ — Telegram Mini App
+ * Главный экран: баннер-картинка + логотип (вертикально: знак </> + текст)
+ * «прелоадер -> в шапку» + кнопка-картинка на сайте внизу.
+ * Данные — из config.json.
  */
 (function () {
   "use strict";
@@ -19,7 +15,6 @@
     if (webapp.disableVerticalSwipes) webapp.disableVerticalSwipes();
     if (webapp.setHeaderColor) webapp.setHeaderColor("#0a083c");
     if (webapp.setBackgroundColor) webapp.setBackgroundColor("#0a083c");
-    try { if (webapp.setBottomBarColor) webapp.setBottomBarColor("#0a083c"); } catch (e) {}
   }
 
   var app = document.getElementById("app");
@@ -46,7 +41,7 @@
       app.innerHTML =
         '<div class="empty">Не удалось загрузить настройки.<br><small>' +
         esc(err.message) + "</small></div>";
-      finishLoader();
+      showHeaderLogo(false);
     });
 
   function render(cfg) {
@@ -54,89 +49,105 @@
     var banner = cfg.banner || {};
     var appCfg = cfg.app || {};
 
-    // шапка с логотипом (сюда приезжает лого)
+    // фон-картинка
+    if (appCfg.backgroundImage) {
+      document.body.style.backgroundImage = "url('" + esc(appCfg.backgroundImage) + "')";
+    }
+
+    // шапка: знак + текст
     var header = document.createElement("div");
     header.className = "header";
     header.innerHTML =
-      '<img class="header-logo" id="headerLogo" src="assets/logo-h-white.svg" alt="ФИЛОСОФТ" />';
+      '<img class="header-mark" id="headerMark" src="assets/mark-white.svg" alt="ФИЛОСОФТ" />' +
+      '<div class="header-word" id="headerWord">ФИЛОСОФТ</div>';
     app.innerHTML = "";
     app.appendChild(header);
 
-    var body = "";
+    // баннер
     if (banner && banner.active !== false && banner.image) {
-      body += '<div class="banner">';
-      body += '<img class="banner-img" src="' + esc(banner.image) + '" alt="" />';
-      body += "</div>";
+      var bn = document.createElement("div");
+      bn.className = "banner";
+      bn.innerHTML = '<img class="banner-img" src="' + esc(banner.image) + '" alt="" />';
+      app.appendChild(bn);
     } else {
-      body = '<div class="empty">Здесь появится актуальное событие.</div>';
+      var empty = document.createElement("div");
+      empty.className = "empty";
+      empty.textContent = "Здесь появится актуальное событие.";
+      app.appendChild(empty);
     }
-    app.insertAdjacentHTML("beforeend", body);
 
-    // футер со ссылкой на сайт
-    if (appCfg.footerLink && appCfg.footerLink.label) {
-      var footer = document.createElement("a");
-      footer.className = "footer-link";
-      footer.href = "#";
-      footer.textContent = appCfg.footerLink.label;
-      footer.addEventListener("click", function (e) {
-        e.preventDefault();
-        openUrl(appCfg.footerLink.url);
+    // футер: кнопка-картинка
+    if (appCfg.footerImage) {
+      var btn = document.createElement("button");
+      btn.className = "footer-btn";
+      btn.type = "button";
+      btn.innerHTML = '<img src="' + esc(appCfg.footerImage) + '" alt="' + esc(appCfg.footerLink && appCfg.footerLink.label) + '" />';
+      btn.addEventListener("click", function () {
+        openUrl(appCfg.footerLink && appCfg.footerLink.url);
       });
-      var footWrap = document.createElement("div");
-      footWrap.className = "footer";
-      footWrap.appendChild(footer);
-      app.appendChild(footWrap);
+      var foot = document.createElement("div");
+      foot.className = "footer";
+      foot.appendChild(btn);
+      app.appendChild(foot);
     }
 
     runLogoFlow();
     if (webapp) webapp.ready();
   }
 
-  /* Анимация лого: из центра (прелоадер) поднимается в шапку */
+  /* Анимация лого: прелоадер (центр) уезжает в шапку */
   function runLogoFlow() {
-    // создаём прелоадер с логотипом ПО ЦЕНТРУ
     var loader = document.createElement("div");
     loader.className = "loader";
-    loader.innerHTML = '<img class="loader-logo" src="assets/logo-h-white.svg" alt="" />';
+    loader.innerHTML = '<img class="loader-mark" src="assets/mark-white.svg" alt="" />';
+    // наследуем фон body на прелоадер
+    loader.style.backgroundImage = getComputedStyle(document.body).backgroundImage;
+    loader.style.backgroundColor = "#0a083c";
     document.body.appendChild(loader);
 
-    var headerLogo = document.getElementById("headerLogo");
-    if (!headerLogo) { finishLoader(loader); return; }
+    var headerMark = document.getElementById("headerMark");
+    var headerWord = document.getElementById("headerWord");
+    if (!headerMark) { finishLoader(loader); return; }
 
-    // ждём рендер, затем анимируем перемещение
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
-        var loaderLogo = loader.querySelector(".loader-logo");
-        if (!loaderLogo) { finishLoader(loader); return; }
+        var lm = loader.querySelector(".loader-mark");
+        if (!lm) { finishLoader(loader); return; }
 
-        // стартовая позиция логотипа (центр экрана)
-        var lr = loaderLogo.getBoundingClientRect();
+        var lr = lm.getBoundingClientRect();
         var lrx = lr.left + lr.width / 2;
         var lry = lr.top + lr.height / 2;
 
-        // целевая позиция (шапка)
-        var hr = headerLogo.getBoundingClientRect();
+        var hr = headerMark.getBoundingClientRect();
         var hx = hr.left + hr.width / 2;
         var hy = hr.top + hr.height / 2;
 
-        // перемещение логотипа из центра в шапку
         var dx = hx - lrx;
         var dy = hy - lry;
 
-        loaderLogo.style.transition = "transform 0.65s cubic-bezier(0.2, 0.8, 0.3, 1), opacity 0.65s ease";
-        loaderLogo.style.transform = "translate(" + dx + "px, " + dy + "px) scale(0.6)";
-        loaderLogo.style.opacity = "0.95";
-        headerLogo.style.opacity = "1";
+        lm.style.transition = "transform 0.6s cubic-bezier(0.2,0.8,0.3,1), opacity 0.5s ease";
+        lm.style.transform = "translate(" + dx + "px, " + dy + "px) scale(0.5)";
+        lm.style.opacity = "0.9";
+        showHeaderLogo(true);
 
-        setTimeout(finishLoader, 700, loader);
+        setTimeout(finishLoader, 650, loader);
       });
     });
   }
 
+  function showHeaderLogo(show) {
+    var hm = document.getElementById("headerMark");
+    var hw = document.getElementById("headerWord");
+    if (show) { if (hm) hm.style.opacity = "1"; if (hw) hw.style.opacity = "1"; }
+    // классы для анимации появления
+  }
+
   function finishLoader(loader) {
     if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
-    var hl = document.getElementById("headerLogo");
-    if (hl) hl.classList.add("settled");
+    var hm = document.getElementById("headerMark");
+    var hw = document.getElementById("headerWord");
+    if (hm) hm.classList.add("settled");
+    if (hw) hw.classList.add("settled");
     if (webapp) webapp.ready();
   }
 })();

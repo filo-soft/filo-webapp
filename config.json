@@ -1,15 +1,13 @@
 {
   "banner": {
     "active": true,
-    "image": "assets/banner.jpg",
-    "link": {
-      "label": "filo-soft.ru",
-      "url": "https://filo-soft.ru"
-    }
+    "image": "assets/banner.png"
   },
   "app": {
+    "backgroundImage": "assets/background.jpg",
+    "footerImage": "assets/button.png",
     "footerLink": {
-      "label": "filo-soft.ru",
+      "label": "FiloSoft.ru",
       "url": "https://filo-soft.ru"
     }
   }
