@@ -141,45 +141,104 @@ body {
   animation: bannerIn 0.5s ease forwards;
   animation-delay: 0.25s;
 }
+.footer {
+  position: relative;
+}
 .buttons-row {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 14px;
+  position: relative;
 }
 
 .footer-btn {
-  display: inline-block;
+  display: block;
   cursor: pointer;
   border: none;
   padding: 0;
   background: transparent;
   line-height: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
-.footer-btn ~ .footer-btn { line-height: 0; }
 
 .site-btn {
   max-width: 240px;
   width: 100%;
-  flex: 1 1 auto;
 }
-
-.game-btn {
-  width: 64px;
-  flex: 0 0 auto;
-}
-.game-btn img {
+.site-btn img,
+.site-btn .btn-img {
   width: 100%;
   height: auto;
   display: block;
 }
-.footer-btn img,
-.footer-btn .btn-img {
-  width: 100%;
-  height: auto;
+
+/* иконка игры — отдельно справа от кнопки сайта, не сдвигая её с центра */
+.game-btn {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  background: #252090;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+.game-btn img {
+  width: 44px;
+  height: 44px;
   display: block;
 }
 .footer-btn:active { opacity: 0.85; }
+
+/* ===== Оверлей игры (открывается внутри мини-апа) ===== */
+.game-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #0a083c;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.game-overlay.show { opacity: 1; }
+.game-overlay-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px calc(8px + env(safe-area-inset-top));
+  background: #0a083c;
+  flex: 0 0 auto;
+}
+.game-overlay-title {
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  color: #f0f0fc;
+}
+.game-close {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: #252090;
+  color: #f0f0fc;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 0;
+  flex: 0 0 auto;
+}
+.game-close:active { opacity: 0.85; }
+.game-frame {
+  flex: 1 1 auto;
+  width: 100%;
+  border: none;
+  background: #0a083c;
+}
 
 /* баннер выключен */
 .empty {

@@ -34,6 +34,40 @@
     else window.open(u, "_blank");
   }
 
+  /* Открывает игру внутри мини-апа (iframe-оверлей), не выталкивая в браузер */
+  function openGame(url) {
+    var u = String(url || "").trim();
+    if (!u) return;
+    closeGame();
+
+    var overlay = document.createElement("div");
+    overlay.className = "game-overlay";
+    overlay.innerHTML =
+      '<div class="game-overlay-head">' +
+        '<span class="game-overlay-title">Filo Runner</span>' +
+        '<button type="button" class="game-close" aria-label="Закрыть игру">✕</button>' +
+      '</div>' +
+      '<iframe class="game-frame" src="' + esc(u) + '" allow="fullscreen" allowfullscreen></iframe>';
+    overlay.querySelector(".game-close").addEventListener("click", closeGame);
+    document.body.appendChild(overlay);
+    document.body.classList.add("game-open");
+    if (webapp && webapp.disableVerticalSwipes) webapp.disableVerticalSwipes();
+
+    setTimeout(function () {
+      overlay.classList.add("show");
+    }, 10);
+
+    function closeGame() {
+      var o = document.body.querySelector(".game-overlay");
+      if (!o) return;
+      o.classList.remove("show");
+      setTimeout(function () {
+        if (o.parentNode) o.parentNode.removeChild(o);
+      }, 250);
+      document.body.classList.remove("game-open");
+    }
+  }
+
   fetch("config.json", { cache: "no-store" })
     .then(function (r) { if (!r.ok) throw new Error("config " + r.status); return r.json(); })
     .then(render)
@@ -99,7 +133,7 @@
         gbtn.type = "button";
         gbtn.innerHTML = '<img src="' + esc(gameCfg.image) + '" alt="' + esc(gameCfg.label) + '" />';
         gbtn.addEventListener("click", function () {
-          openUrl(gameCfg.url);
+          openGame(gameCfg.url);
         });
         foot.appendChild(gbtn);
       }
