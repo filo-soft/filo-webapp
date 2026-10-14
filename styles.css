@@ -170,10 +170,10 @@ body {
   display: block;
 }
 
-/* иконка игры — отдельно справа от кнопки сайта, не сдвигая её с центра */
+/* иконка игры — сразу справа от кнопки сайта, по её центру */
 .game-btn {
   position: absolute;
-  right: 0;
+  left: calc(50% + 128px);
   top: 50%;
   transform: translateY(-50%);
   width: 60px;
@@ -181,9 +181,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0;
-  background: #252090;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  border: none;
+  padding: 0;
+  background: transparent;
 }
 .game-btn img {
   width: 44px;
