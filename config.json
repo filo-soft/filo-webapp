@@ -1,0 +1,16 @@
+{
+  "banner": {
+    "active": true,
+    "image": "assets/banner.jpg",
+    "link": {
+      "label": "filo-soft.ru",
+      "url": "https://filo-soft.ru"
+    }
+  },
+  "app": {
+    "footerLink": {
+      "label": "filo-soft.ru",
+      "url": "https://filo-soft.ru"
+    }
+  }
+}
