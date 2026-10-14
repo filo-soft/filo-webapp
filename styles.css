@@ -173,8 +173,8 @@ body {
 /* иконка игры — сразу справа от кнопки сайта, по её центру */
 .game-btn {
   position: absolute;
-  left: calc(50% + 128px);
-  top: 50%;
+  left: calc(50% + 148px);
+  top: calc(50% + 10px);
   transform: translateY(-50%);
   width: 60px;
   height: 60px;
