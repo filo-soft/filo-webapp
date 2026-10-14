@@ -48,6 +48,7 @@
     cfg = cfg || {};
     var banner = cfg.banner || {};
     var appCfg = cfg.app || {};
+    var gameCfg = cfg.game || {};
 
     // фон-картинка
     if (appCfg.backgroundImage) {
@@ -76,18 +77,32 @@
       app.appendChild(empty);
     }
 
-    // футер: кнопка-картинка
-    if (appCfg.footerImage) {
-      var btn = document.createElement("button");
-      btn.className = "footer-btn";
-      btn.type = "button";
-      btn.innerHTML = '<img src="' + esc(appCfg.footerImage) + '" alt="' + esc(appCfg.footerLink && appCfg.footerLink.label) + '" />';
-      btn.addEventListener("click", function () {
-        openUrl(appCfg.footerLink && appCfg.footerLink.url);
-      });
+    // футер: кнопки-картинки (сайт + игра)
+    var hasFooter = appCfg.footerImage;
+    var hasGame = gameCfg && gameCfg.active !== false && gameCfg.image;
+    if (hasFooter || hasGame) {
       var foot = document.createElement("div");
-      foot.className = "footer";
-      foot.appendChild(btn);
+      foot.className = "footer buttons-row";
+      if (hasFooter) {
+        var btn = document.createElement("button");
+        btn.className = "footer-btn site-btn";
+        btn.type = "button";
+        btn.innerHTML = '<img src="' + esc(appCfg.footerImage) + '" alt="' + esc(appCfg.footerLink && appCfg.footerLink.label) + '" />';
+        btn.addEventListener("click", function () {
+          openUrl(appCfg.footerLink && appCfg.footerLink.url);
+        });
+        foot.appendChild(btn);
+      }
+      if (hasGame) {
+        var gbtn = document.createElement("button");
+        gbtn.className = "footer-btn game-btn";
+        gbtn.type = "button";
+        gbtn.innerHTML = '<img src="' + esc(gameCfg.image) + '" alt="' + esc(gameCfg.label) + '" />';
+        gbtn.addEventListener("click", function () {
+          openUrl(gameCfg.url);
+        });
+        foot.appendChild(gbtn);
+      }
       app.appendChild(foot);
     }
 

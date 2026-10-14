@@ -141,14 +141,37 @@ body {
   animation: bannerIn 0.5s ease forwards;
   animation-delay: 0.25s;
 }
+.buttons-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 14px;
+}
+
 .footer-btn {
   display: inline-block;
-  max-width: 240px;
-  width: 100%;
   cursor: pointer;
   border: none;
   padding: 0;
   background: transparent;
+  line-height: 0;
+}
+.footer-btn ~ .footer-btn { line-height: 0; }
+
+.site-btn {
+  max-width: 240px;
+  width: 100%;
+  flex: 1 1 auto;
+}
+
+.game-btn {
+  width: 64px;
+  flex: 0 0 auto;
+}
+.game-btn img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 .footer-btn img,
 .footer-btn .btn-img {

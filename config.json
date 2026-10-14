@@ -10,5 +10,11 @@
       "label": "FiloSoft.ru",
       "url": "https://filo-soft.ru"
     }
+  },
+  "game": {
+    "active": true,
+    "image": "assets/game.png",
+    "label": "Filo Runner",
+    "url": "https://filo-soft.github.io/filo-runner/"
   }
 }
